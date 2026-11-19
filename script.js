@@ -15,17 +15,6 @@ const GAME_HEIGHT = 600;
 canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
 
-// 1. Get Canvas
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-// 2. Game dimensions
-const GAME_WIDTH = 800;
-const GAME_HEIGHT = 600;
-
-canvas.width = GAME_WIDTH;
-canvas.height = GAME_HEIGHT;
-
 // 3. Keyboard controls
 const keys = {
     left: false,
@@ -54,7 +43,7 @@ document.addEventListener("keyup", function(event) {
     }
 });
 
-// 5. Create player object
+// 4. Create player object
 const player = {
     x: 100,
     y: 450,
@@ -62,7 +51,7 @@ const player = {
     height: 50,
     speed: 5
 };
-// 6. Draw the ground
+// 5. Draw the ground
 function drawGround() {
     ctx.fillStyle = "#103525";
 
@@ -84,7 +73,7 @@ function drawGround() {
     );
 }
 
-// 7. Draw the robot
+// 6. Draw the robot
 function drawPlayer() {
 
     // Robot body
@@ -133,7 +122,7 @@ function drawPlayer() {
     );
 }
 
-// 8. Draw the game
+// 7. Draw the game
 function gameLoop() {
 
     ctx.clearRect(
@@ -149,5 +138,5 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// 9. Start game
+// 8. Start game
 gameLoop();
