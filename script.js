@@ -50,7 +50,8 @@ const player = {
     x: 100,
     y: 450,
     width: 40,
-    height: 50
+    height: 50,
+    speed: 5
 };
 
 // 4. Draw the ground
