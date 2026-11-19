@@ -15,7 +15,37 @@ const GAME_HEIGHT = 600;
 canvas.width = GAME_WIDTH;
 canvas.height = GAME_HEIGHT;
 
-// 3. Create player object
+// 3. Keyboard controls
+const keys = {
+    left: false,
+    right: false
+};
+
+// Detect key press
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "ArrowLeft" || event.key === "a") {
+        keys.left = true;
+    }
+
+    if (event.key === "ArrowRight" || event.key === "d") {
+        keys.right = true;
+    }
+
+});
+
+// Detect key release
+document.addEventListener("keyup", function(event) {
+
+    if (event.key === "ArrowLeft" || event.key === "a") {
+        keys.left = false;
+    }
+
+    if (event.key === "ArrowRight" || event.key === "d") {
+        keys.right = false;
+    }
+
+});
 const player = {
     x: 100,
     y: 450,
