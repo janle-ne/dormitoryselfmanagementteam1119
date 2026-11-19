@@ -1,184 +1,323 @@
 
 /* =================================
    PLAYER 1: TODAY IS YOUR DAY
-   Main Stylesheet
+   M2 - Player Movement
 ================================= */
 
 
-/* 1. Color palette */
+/* =================================
+   1. GET CANVAS
+================================= */
 
-:root {
-    --dark: #071A12;
-    --navy: #0B172A;
-    --panel: #103525;
-    --green: #22C55E;
-    --light-green: #86EFAC;
-    --yellow: #FACC15;
-    --white: #F0FDF4;
-}
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 
-/* 2. Basic page setup */
+/* =================================
+   2. GAME SETTINGS
+================================= */
 
-* {
-    box-sizing: border-box;
-}
+const GAME_WIDTH = 800;
+const GAME_HEIGHT = 600;
 
-body {
-    margin: 0;
-    min-height: 100vh;
+const GROUND_Y = 520;
 
-    background-color: var(--dark);
-    color: var(--white);
-
-    font-family: Arial, sans-serif;
-}
+canvas.width = GAME_WIDTH;
+canvas.height = GAME_HEIGHT;
 
 
-/* 3. Main game container */
+/* =================================
+   3. KEYBOARD CONTROLS
+================================= */
 
-.game-container {
-    width: 100%;
-    min-height: 100vh;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-    gap: 20px;
-}
+const keys = {
+    left: false,
+    right: false
+};
 
 
-/* 4. Game header */
+// Detect key press
+document.addEventListener("keydown", function(event) {
 
-.game-header {
-    text-align: center;
-}
-
-.game-title {
-    color: var(--green);
-
-    font-size: clamp(20px, 4vw, 36px);
-    font-weight: bold;
-
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-}
-
-.game-subtitle {
-    color: var(--light-green);
-
-    font-size: 12px;
-    letter-spacing: 3px;
-}
-
-
-/* 5. Game screen */
-
-.game-section {
-    width: 100%;
-    max-width: 800px;
-}
-
-#gameCanvas {
-    display: block;
-
-    width: 100%;
-    height: auto;
-
-    aspect-ratio: 4 / 3;
-
-    background-color: var(--navy);
-
-    border: 4px solid var(--green);
-    border-radius: 8px;
-
-    image-rendering: pixelated;
-}
-
-
-/* 6. Game information */
-
-.game-info {
-    width: 100%;
-    max-width: 800px;
-
-    color: var(--light-green);
-    text-align: center;
-
-    font-size: 14px;
-}
-
-.game-info h2 {
-    color: var(--green);
-
-    font-size: 16px;
-    letter-spacing: 2px;
-}
-
-.controls {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-
-    gap: 20px;
-}
-
-.controls p {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.key {
-    display: inline-block;
-
-    min-width: 28px;
-    padding: 6px 9px;
-
-    background-color: var(--panel);
-    border: 1px solid var(--green);
-    border-radius: 4px;
-
-    color: var(--yellow);
-    font-weight: bold;
-}
-
-.game-message {
-    margin-top: 20px;
-
-    color: var(--yellow);
-    font-weight: bold;
-
-    letter-spacing: 2px;
-}
-
-
-/* 7. Mobile adjustments */
-
-@media (max-width: 600px) {
-
-    .game-container {
-        padding: 12px;
-        gap: 12px;
+    // Move left
+    if (
+        event.key === "ArrowLeft" ||
+        event.key.toLowerCase() === "a"
+    ) {
+        keys.left = true;
+        event.preventDefault();
     }
 
-    .game-title {
-        font-size: 20px;
+    // Move right
+    if (
+        event.key === "ArrowRight" ||
+        event.key.toLowerCase() === "d"
+    ) {
+        keys.right = true;
+        event.preventDefault();
     }
 
-    .game-subtitle {
-        font-size: 10px;
+    // Jump
+    if (
+        event.code === "Space" &&
+        player.isOnGround
+    ) {
+        player.velocityY = -player.jumpPower;
+        player.isOnGround = false;
+
+        event.preventDefault();
     }
 
-    .game-info {
-        font-size: 12px;
+});
+
+
+// Detect key release
+document.addEventListener("keyup", function(event) {
+
+    // Stop moving left
+    if (
+        event.key === "ArrowLeft" ||
+        event.key.toLowerCase() === "a"
+    ) {
+        keys.left = false;
     }
 
-    .controls {
-        gap: 5px 12px;
+    // Stop moving right
+    if (
+        event.key === "ArrowRight" ||
+        event.key.toLowerCase() === "d"
+    ) {
+        keys.right = false;
+    }
+
+});
+
+
+// Stop movement if browser loses focus
+window.addEventListener("blur", function() {
+
+    keys.left = false;
+    keys.right = false;
+
+});
+
+
+/* =================================
+   4. PLAYER OBJECT
+================================= */
+
+const player = {
+
+    // Position
+    x: 100,
+    y: 470,
+
+    // Dimensions
+    width: 40,
+    height: 50,
+
+    // Horizontal movement
+    speed: 5,
+
+    // Vertical movement
+    velocityY: 0,
+    jumpPower: 15,
+    gravity: 0.7,
+
+    // Ground status
+    isOnGround: true
+
+};
+
+
+/* =================================
+   5. DRAW GROUND
+================================= */
+
+function drawGround() {
+
+    // Main ground
+    ctx.fillStyle = "#103525";
+
+    ctx.fillRect(
+        0,
+        GROUND_Y,
+        GAME_WIDTH,
+        GAME_HEIGHT - GROUND_Y
+    );
+
+    // Ground top border
+    ctx.fillStyle = "#22C55E";
+
+    ctx.fillRect(
+        0,
+        GROUND_Y,
+        GAME_WIDTH,
+        5
+    );
+
+}
+
+
+/* =================================
+   6. DRAW PLAYER
+================================= */
+
+function drawPlayer() {
+
+    // Robot body
+    ctx.fillStyle = "#22C55E";
+
+    ctx.fillRect(
+        player.x + 5,
+        player.y + 15,
+        30,
+        30
+    );
+
+
+    // Robot head
+    ctx.fillStyle = "#86EFAC";
+
+    ctx.fillRect(
+        player.x,
+        player.y,
+        40,
+        25
+    );
+
+
+    // Robot eyes
+    ctx.fillStyle = "#071A12";
+
+    ctx.fillRect(
+        player.x + 8,
+        player.y + 8,
+        7,
+        7
+    );
+
+    ctx.fillRect(
+        player.x + 25,
+        player.y + 8,
+        7,
+        7
+    );
+
+
+    // Robot antenna
+    ctx.fillStyle = "#FACC15";
+
+    ctx.fillRect(
+        player.x + 17,
+        player.y - 8,
+        6,
+        8
+    );
+
+}
+
+
+/* =================================
+   7. HORIZONTAL MOVEMENT
+================================= */
+
+function updatePlayer() {
+
+    // Move left
+    if (keys.left) {
+        player.x -= player.speed;
+    }
+
+    // Move right
+    if (keys.right) {
+        player.x += player.speed;
+    }
+
+
+    // Left screen boundary
+    if (player.x < 0) {
+        player.x = 0;
+    }
+
+
+    // Right screen boundary
+    if (player.x + player.width > GAME_WIDTH) {
+        player.x = GAME_WIDTH - player.width;
     }
 
 }
+
+
+/* =================================
+   8. JUMP AND GRAVITY
+================================= */
+
+function updateVerticalMovement() {
+
+    // Apply gravity
+    player.velocityY += player.gravity;
+
+
+    // Update vertical position
+    player.y += player.velocityY;
+
+
+    // Ground collision
+    if (player.y + player.height >= GROUND_Y) {
+
+        // Place player on the ground
+        player.y = GROUND_Y - player.height;
+
+
+        // Stop vertical movement
+        player.velocityY = 0;
+
+
+        // Allow jumping again
+        player.isOnGround = true;
+
+    }
+
+}
+
+
+/* =================================
+   9. GAME LOOP
+================================= */
+
+function gameLoop() {
+
+    // Clear previous frame
+    ctx.clearRect(
+        0,
+        0,
+        GAME_WIDTH,
+        GAME_HEIGHT
+    );
+
+
+    // Update player movement
+    updatePlayer();
+
+
+    // Update jump and gravity
+    updateVerticalMovement();
+
+
+    // Draw game objects
+    drawGround();
+    drawPlayer();
+
+
+    // Repeat game loop
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+/* =================================
+   10. START GAME
+================================= */
+
+gameLoop();
