@@ -40,8 +40,14 @@ document.addEventListener("keydown", function(event) {
         event.preventDefault();
     }
 
-});
+    // Jump when Space is pressed
+    if (event.code === "Space" && player.isOnGround) {
+        player.velocityY = -player.jumpPower;
+        player.isOnGround = false;
+        event.preventDefault();
+    }
 
+});
 // Detect key release
 document.addEventListener("keyup", function(event) {
 
