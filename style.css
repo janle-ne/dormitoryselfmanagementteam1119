@@ -4,7 +4,9 @@
    Main Stylesheet
 ================================= */
 
+
 /* 1. Color palette */
+
 :root {
     --dark: #071A12;
     --navy: #0B172A;
@@ -15,7 +17,9 @@
     --white: #F0FDF4;
 }
 
+
 /* 2. Basic page setup */
+
 * {
     box-sizing: border-box;
 }
@@ -23,63 +27,158 @@
 body {
     margin: 0;
     min-height: 100vh;
+
     background-color: var(--dark);
     color: var(--white);
+
     font-family: Arial, sans-serif;
 }
 
+
 /* 3. Main game container */
+
 .game-container {
     width: 100%;
     min-height: 100vh;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     padding: 20px;
     gap: 20px;
 }
 
-/* 4. Game title */
-.game-title {
-    color: var(--green);
+
+/* 4. Game header */
+
+.game-header {
     text-align: center;
-    font-size: clamp(20px, 4vw, 36px);
-    font-weight: bold;
-    letter-spacing: 2px;
 }
 
+.game-title {
+    color: var(--green);
+
+    font-size: clamp(20px, 4vw, 36px);
+    font-weight: bold;
+
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.game-subtitle {
+    color: var(--light-green);
+
+    font-size: 12px;
+    letter-spacing: 3px;
+}
+
+
 /* 5. Game screen */
-#gameCanvas {
-    display: block;
+
+.game-section {
     width: 100%;
     max-width: 800px;
+}
+
+#gameCanvas {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
     aspect-ratio: 4 / 3;
+
     background-color: var(--navy);
+
     border: 4px solid var(--green);
     border-radius: 8px;
+
     image-rendering: pixelated;
 }
 
+
 /* 6. Game information */
+
 .game-info {
+    width: 100%;
+    max-width: 800px;
+
     color: var(--light-green);
     text-align: center;
+
     font-size: 14px;
 }
 
+.game-info h2 {
+    color: var(--green);
+
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 20px;
+}
+
+.controls p {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.key {
+    display: inline-block;
+
+    min-width: 28px;
+    padding: 6px 9px;
+
+    background-color: var(--panel);
+    border: 1px solid var(--green);
+    border-radius: 4px;
+
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+.game-message {
+    margin-top: 20px;
+
+    color: var(--yellow);
+    font-weight: bold;
+
+    letter-spacing: 2px;
+}
+
+
 /* 7. Mobile adjustments */
+
 @media (max-width: 600px) {
+
     .game-container {
         padding: 12px;
+        gap: 12px;
     }
 
     .game-title {
         font-size: 20px;
     }
 
+    .game-subtitle {
+        font-size: 10px;
+    }
+
     .game-info {
         font-size: 12px;
     }
-}
 
+    .controls {
+        gap: 5px 12px;
+    }
+
+}
