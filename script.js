@@ -67,9 +67,16 @@ const player = {
     y: 450,
     width: 40,
     height: 50,
-    speed: 5
-};
 
+    // Horizontal movement
+    speed: 5,
+
+    // Jump and gravity
+    velocityY: 0,
+    jumpPower: 15,
+    gravity: 0.7,
+    isOnGround: false
+};
 // 5. Draw the ground
 function drawGround() {
 
