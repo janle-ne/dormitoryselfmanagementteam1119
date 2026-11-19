@@ -1,7 +1,7 @@
 
 /* =================================
    PLAYER 1: TODAY IS YOUR DAY
-   M2 - Step 1: Create Player
+   M2 - Step 2: Player Movement
 ================================= */
 
 // 1. Get Canvas
@@ -23,24 +23,42 @@ const keys = {
 
 // Detect key press
 document.addEventListener("keydown", function(event) {
-    if (event.key === "ArrowLeft" || event.key === "a") {
+
+    if (
+        event.key === "ArrowLeft" ||
+        event.key.toLowerCase() === "a"
+    ) {
         keys.left = true;
+        event.preventDefault();
     }
 
-    if (event.key === "ArrowRight" || event.key === "d") {
+    if (
+        event.key === "ArrowRight" ||
+        event.key.toLowerCase() === "d"
+    ) {
         keys.right = true;
+        event.preventDefault();
     }
+
 });
 
 // Detect key release
 document.addEventListener("keyup", function(event) {
-    if (event.key === "ArrowLeft" || event.key === "a") {
+
+    if (
+        event.key === "ArrowLeft" ||
+        event.key.toLowerCase() === "a"
+    ) {
         keys.left = false;
     }
 
-    if (event.key === "ArrowRight" || event.key === "d") {
+    if (
+        event.key === "ArrowRight" ||
+        event.key.toLowerCase() === "d"
+    ) {
         keys.right = false;
     }
+
 });
 
 // 4. Create player object
@@ -51,8 +69,10 @@ const player = {
     height: 50,
     speed: 5
 };
+
 // 5. Draw the ground
 function drawGround() {
+
     ctx.fillStyle = "#103525";
 
     ctx.fillRect(
@@ -71,6 +91,7 @@ function drawGround() {
         GAME_WIDTH,
         5
     );
+
 }
 
 // 6. Draw the robot
@@ -78,6 +99,7 @@ function drawPlayer() {
 
     // Robot body
     ctx.fillStyle = "#22C55E";
+
     ctx.fillRect(
         player.x + 5,
         player.y + 15,
@@ -87,6 +109,7 @@ function drawPlayer() {
 
     // Robot head
     ctx.fillStyle = "#86EFAC";
+
     ctx.fillRect(
         player.x,
         player.y,
@@ -120,11 +143,37 @@ function drawPlayer() {
         6,
         8
     );
+
 }
 
-// 7. Draw the game
+// 7. Update player position
+function updatePlayer() {
+
+    // Move left
+    if (keys.left) {
+        player.x -= player.speed;
+    }
+
+    // Move right
+    if (keys.right) {
+        player.x += player.speed;
+    }
+
+    // Keep player inside the screen
+    if (player.x < 0) {
+        player.x = 0;
+    }
+
+    if (player.x + player.width > GAME_WIDTH) {
+        player.x = GAME_WIDTH - player.width;
+    }
+
+}
+
+// 8. Game loop
 function gameLoop() {
 
+    // Clear previous frame
     ctx.clearRect(
         0,
         0,
@@ -132,11 +181,17 @@ function gameLoop() {
         GAME_HEIGHT
     );
 
+    // Update game objects
+    updatePlayer();
+
+    // Draw game objects
     drawGround();
     drawPlayer();
 
+    // Repeat game loop
     requestAnimationFrame(gameLoop);
+
 }
 
-// 8. Start game
+// 9. Start game
 gameLoop();
